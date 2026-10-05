@@ -1,0 +1,30 @@
+[project]
+name = "causal-learning"
+version = "0.1.0"
+description = "Causal inference learning notes and Python experiments"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.0,<3",
+    "pandas>=2.2,<4",
+    "matplotlib>=3.9,<4",
+]
+
+[dependency-groups]
+docs = [
+    "mkdocs>=1.6,<2",
+    "mkdocs-material>=9.6,<10",
+    "pymdown-extensions>=10.14,<11",
+]
+dev = ["ruff>=0.11,<1"]
+
+[tool.uv]
+package = false
+default-groups = ["dev", "docs"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

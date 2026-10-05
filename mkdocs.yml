@@ -1,0 +1,53 @@
+site_name: Causal Inference Study
+site_description: 인과추론의 개념을 하루씩 정리하고 Python으로 실험하는 학습 기록
+site_url: https://karim-moon.github.io/Causal/
+repo_url: https://github.com/karim-moon/Causal
+repo_name: karim-moon/Causal
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: ko
+  features:
+    - navigation.indexes
+    - navigation.top
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      toggle:
+        icon: material/weather-night
+        name: 다크 모드
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      toggle:
+        icon: material/weather-sunny
+        name: 라이트 모드
+
+nav:
+  - 홈: index.md
+  - 학습 기록:
+      - Day 01: day-01/index.md
+  - 기록 작성 가이드: guide.md
+
+plugins:
+  - search:
+      lang:
+        - ko
+        - en
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.arithmatex:
+      generic: true
+  - toc:
+      permalink: true
+
+extra_javascript:
+  - assets/javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js
