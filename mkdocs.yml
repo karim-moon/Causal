@@ -29,7 +29,7 @@ theme:
 nav:
   - 홈: index.md
   - 학습 기록:
-      - Day 01: day-01/index.md
+      - Day 01 · ATE: day-01/index.md
   - 기록 작성 가이드: guide.md
 
 plugins:

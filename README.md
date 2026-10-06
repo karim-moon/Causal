@@ -40,7 +40,7 @@ uv run mkdocs serve
 └── uv.lock
 ```
 
-문서 폴더는 `day-01`, Python 폴더는 `day_01`처럼 이름을 붙입니다.
+문서 폴더는 `day-01`, Python 폴더는 `day_01_ate`처럼 이름을 붙입니다.
 기존 루트의 `main.py`는 초기 샘플이며 학습 실습은 `src/`에서 실행합니다.
 
 ## 다음 Day 추가하기
