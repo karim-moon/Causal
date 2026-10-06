@@ -1,73 +1,75 @@
 # Day 01 · ATE (Average Treatment Effect)
 
-## 오늘의 질문
+## Today's question
 
-**새 UI를 적용하면 사용자의 결과 점수는 평균적으로 얼마나 높아질까?**
+**How much does a new UI increase users' outcome scores, on average?**
 
-기존 UI를 쓰는 대조군과 새 UI를 쓰는 처치군을 무작위로 나눈 뒤,
-두 집단의 평균 점수 차이로 새 UI의 평균 처치 효과를 추정합니다.
+Randomly assign users to a treatment group using the new UI and a control group
+using the existing UI. Estimate the new UI's average treatment effect by comparing
+the groups' mean outcome scores.
 
-이번 기록은 [`simulate_ate.py`](https://github.com/karim-moon/Causal/blob/main/src/day_01_ate/simulate_ate.py)의
-데이터 생성 과정과 실행 결과를 바탕으로 합니다.
+This note follows the data generation process and output in
+[`simulate_ate.py`](https://github.com/karim-moon/Causal/blob/main/src/day_01_ate/simulate_ate.py).
 
-## 핵심 개념
+## Key concepts
 
-### 처치와 잠재적 결과
+### Treatment and potential outcomes
 
-처치(treatment)는 효과를 알고 싶은 개입입니다. 이 실습에서 처치는 **새 UI 적용**입니다.
+A treatment is the intervention whose effect we want to understand.
+In this experiment, the treatment is **applying the new UI**.
 
-| 기호 | 의미 | 코드에서의 대응 |
+| Symbol | Meaning | Corresponding code |
 | --- | --- | --- |
-| $T_i = 1$ | 사용자 $i$에게 새 UI 적용 | `treatment == 1` |
-| $T_i = 0$ | 사용자 $i$에게 기존 UI 유지 | `treatment == 0` |
-| $Y_i(1)$ | 새 UI를 적용했을 때의 잠재적 결과 | 처치 효과를 포함한 점수 |
-| $Y_i(0)$ | 기존 UI를 유지했을 때의 잠재적 결과 | 처치 효과를 더하기 전 점수 |
-| $Y_i$ | 배정된 UI에서 실제 관측한 결과 | `y` |
+| $T_i = 1$ | User $i$ receives the new UI | `treatment == 1` |
+| $T_i = 0$ | User $i$ keeps the existing UI | `treatment == 0` |
+| $Y_i(1)$ | User $i$'s potential outcome under the new UI | Score including the treatment effect |
+| $Y_i(0)$ | User $i$'s potential outcome under the existing UI | Score before adding the treatment effect |
+| $Y_i$ | The outcome observed under the assigned UI | `y` |
 
-같은 사용자라도 어떤 UI를 적용하는지에 따라 결과가 달라질 수 있습니다.
-그 두 가능성을 잠재적 결과(potential outcomes)라고 부릅니다.
-실제로는 하나의 UI에 배정되므로 둘 중 하나만 관측합니다.
+The same user could have different outcomes under the two UIs.
+These possibilities are called potential outcomes.
+In an actual experiment, each user receives one UI, so we observe only one of them.
 
 $$
 Y_i = T_i Y_i(1) + (1 - T_i)Y_i(0)
 $$
 
-### ATE는 무엇을 평균 내는가?
+### What does ATE average?
 
-사용자 한 명의 처치 효과는 두 잠재적 결과의 차이입니다.
+A user's individual treatment effect is the difference between their two potential outcomes:
 
 $$
 \tau_i = Y_i(1) - Y_i(0)
 $$
 
-ATE는 이 **개인별 처치 효과를 모집단에 걸쳐 평균 낸 값**입니다.
+The average treatment effect averages these individual effects over the target population:
 
 $$
 \mathrm{ATE} = \mathbb{E}[Y(1) - Y(0)]
 $$
 
-ATE가 3점이면, 대상 모집단에서 새 UI를 적용했을 때 결과 점수가
-기존 UI를 적용했을 때보다 평균적으로 3점 높아진다는 뜻입니다.
-일반적으로 개인별 효과는 다를 수 있지만, 이번 코드는 모든 사용자에게 같은 효과를 설정합니다.
+An ATE of 3 points means that applying the new UI raises the population's mean score
+by 3 points compared with applying the existing UI.
+Individual effects can differ in general; this simulation assigns the same effect to every user.
 
-## Python 실습
+## Python experiment
 
-### 1. 사용자와 결과를 생성하기
+### 1. Generate users and outcomes
 
-코드에서는 다음 설정으로 가상의 사용자 데이터를 만듭니다.
+The experiment generates a synthetic population with the following settings:
 
-| 변수 | 설정 | 의미 |
+| Variable | Setting | Meaning |
 | --- | --- | --- |
-| `N` | `10000` | 사용자 수 |
-| `user_quality` | 평균 0, 표준편차 1인 정규분포 | 사용자마다 다른 기본 성향 |
-| `baseline` | `10` | 공통 기본 점수 |
-| `treatment` | 성공 확률 0.5인 베르누이 배정 | 새 UI 적용 여부 |
-| `true_effect` | `3.0` | 직접 설정한 실제 처치 효과 |
-| `noise` | 평균 0, 표준편차 1인 정규분포 | 결과에 더해지는 무작위 오차 |
+| `N` | `10000` | Number of users |
+| `user_quality` | Normal distribution with mean 0 and standard deviation 1 | Users' underlying tendencies |
+| `baseline` | `10` | Shared baseline score |
+| `treatment` | Bernoulli assignment with probability 0.5 | Whether a user receives the new UI |
+| `true_effect` | `3.0` | The treatment effect set by the simulation |
+| `noise` | Normal distribution with mean 0 and standard deviation 1 | Random variation in the outcome |
 
-`np.random.seed(42)`로 난수 시드를 고정해 실행 결과를 재현할 수 있도록 합니다.
+The code sets `np.random.seed(42)` to make the results reproducible.
 
-결과를 만드는 식은 다음과 같습니다.
+It generates the observed outcome as follows:
 
 ```python
 y = (
@@ -78,23 +80,25 @@ y = (
 )
 ```
 
-수식으로 쓰면 다음과 같습니다. $Q_i$는 `user_quality`, $\varepsilon_i$는 `noise`입니다.
+Let $Q_i$ denote `user_quality` and $\varepsilon_i$ denote `noise`.
+The outcome equation is:
 
 $$
 Y_i = 10 + 2Q_i + 3T_i + \varepsilon_i
 $$
 
-사용자마다 기본 성향과 오차가 다르고, 새 UI를 적용한 사용자에게는 3점이 추가됩니다.
+Users have different underlying tendencies and random errors.
+Receiving the new UI adds 3 points to the outcome.
 
-!!! note "이 코드의 결과 변수"
-    `user_quality`의 주석은 conversion 성향을 언급하지만, 실제로 생성하는 `y`는
-    연속형 점수입니다. 이 실습에서 처치 효과의 단위는 점수입니다.
-    전환 여부를 분석하려면 결과 변수를 0 또는 1로 생성하는 별도의 모델이 필요합니다.
+!!! note "The outcome variable in this code"
+    The comment about `user_quality` mentions conversion propensity, but the generated
+    `y` is a continuous score. Treatment effects in this experiment are measured in
+    score points. Modeling conversion itself would require a binary outcome model.
 
-### 2. 실제 ATE 확인하기
+### 2. Identify the true ATE
 
-코드의 생성 식에서 한 사용자의 성향과 오차를 고정하고 처치 여부만 바꾸면,
-두 잠재적 결과는 다음과 같습니다.
+Hold a user's tendency and noise fixed, and change only their treatment assignment.
+The data generation equation gives:
 
 $$
 \begin{aligned}
@@ -103,7 +107,7 @@ Y_i(1) &= 10 + 2Q_i + 3 + \varepsilon_i
 \end{aligned}
 $$
 
-따라서 모든 사용자의 개인별 처치 효과는 정확히 3점입니다.
+Every user's individual treatment effect is exactly 3 points:
 
 $$
 Y_i(1) - Y_i(0) = 3
@@ -111,21 +115,21 @@ Y_i(1) - Y_i(0) = 3
 \mathrm{ATE} = 3
 $$
 
-이 값을 미리 아는 이유는 시뮬레이션의 생성 식을 직접 설정했기 때문입니다.
-실제 A/B 테스트에서는 효과를 알기 위해 관측 데이터로 추정해야 합니다.
+We know this value because we specified the simulation.
+In a real A/B test, the effect is unknown and must be estimated from observed data.
 
-### 3. 관측 데이터로 ATE 추정하기
+### 3. Estimate ATE from observed data
 
-코드는 각 사용자를 확률 0.5로 새 UI에 배정합니다.
+Each user receives the new UI with probability 0.5:
 
 ```python
 treatment = np.random.binomial(n=1, p=0.5, size=N)
 ```
 
-`n=1`이므로 사용자별 배정 결과는 0 또는 1입니다.
-배정 확률이 0.5여도 실제 집단 크기가 정확히 반씩 나뉘지는 않습니다.
+With `n=1`, each assignment is either 0 or 1.
+A probability of 0.5 does not guarantee two groups of exactly equal size.
 
-배정한 뒤 처치군과 대조군의 평균 점수를 계산합니다.
+Compute the mean outcome in each group:
 
 ```python
 treated_mean = y[treatment == 1].mean()
@@ -134,15 +138,15 @@ control_mean = y[treatment == 0].mean()
 estimated_ate = treated_mean - control_mean
 ```
 
-이 계산은 평균 차이 추정량(difference in means)입니다.
+This is the difference-in-means estimator:
 
 $$
 \widehat{\mathrm{ATE}}
 = \overline{Y}_{T=1} - \overline{Y}_{T=0}
 $$
 
-무작위 배정에서는 처치 여부가 사용자의 잠재적 결과와 독립입니다.
-따라서 두 집단의 평균 차이로 ATE를 추정할 수 있습니다.
+Random assignment makes treatment independent of potential outcomes,
+so the population difference in observed means identifies ATE:
 
 $$
 \mathbb{E}[Y \mid T=1] - \mathbb{E}[Y \mid T=0]
@@ -150,19 +154,19 @@ $$
 = \mathrm{ATE}
 $$
 
-이 관계는 코드에서 처치 여부를 `user_quality`나 `noise`와 독립적으로 생성하기 때문에 성립합니다.
-또한 각 사용자가 두 UI 중 어느 쪽에도 배정될 수 있고,
-자신의 결과가 다른 사용자의 UI 배정에 영향을 받지 않는 상황을 가정합니다.
+The simulation generates treatment independently of `user_quality` and `noise`.
+It also allows each user to receive either UI and assumes that one user's outcome
+does not depend on another user's UI assignment.
 
-### 4. 실행 결과
+### 4. Run the experiment
 
-저장소 루트에서 실행합니다.
+From the repository root:
 
 ```bash
 uv run src/day_01_ate/simulate_ate.py
 ```
 
-현재 코드의 실행 결과는 다음과 같습니다.
+The current code produces:
 
 ```text
 treated : 12.983860837917403
@@ -170,21 +174,22 @@ control : 9.999531448740495
 ATE     : 2.9843293891769083
 ```
 
-출력의 `ATE`는 코드에서 계산한 **추정값**입니다. 생성 식으로 정한 실제 ATE는 `3.0`입니다.
+The printed `ATE` is an estimate. The true ATE specified by the simulation is `3.0`.
 
-## 결과 해석
+## Interpreting the results
 
-### 왜 처치군 평균은 약 13이고 대조군 평균은 약 10일까?
+### Why are the group means close to 13 and 10?
 
-`user_quality`와 `noise`의 기댓값은 모두 0입니다.
-무작위 배정으로 각 집단에서 이 항들이 평균적으로 상쇄되면,
-기존 UI의 평균 점수는 기본값 10에, 새 UI의 평균 점수는 $10 + 3 = 13$에 가까워집니다.
+Both `user_quality` and `noise` have expectation 0.
+With random assignment, their contributions average toward 0 within each group.
+The control mean approaches the baseline of 10, and the treatment mean approaches $10 + 3 = 13$.
 
-### 왜 추정값은 정확히 3이 아닐까?
+### Why is the estimate not exactly 3?
 
-유한한 표본에서는 두 집단의 사용자 성향과 오차 평균이 우연히 달라집니다.
-현재 실행에서는 처치군이 5,124명, 대조군이 4,876명입니다.
-생성 식을 집단별로 평균 내면 추정값을 다음처럼 분해할 수 있습니다.
+In a finite sample, the two groups can have different mean user tendencies and errors by chance.
+This run contains 5,124 treated users and 4,876 control users.
+
+Averaging the outcome equation within each group gives:
 
 $$
 \widehat{\mathrm{ATE}}
@@ -193,28 +198,30 @@ $$
 + \left(\overline{\varepsilon}_{T=1} - \overline{\varepsilon}_{T=0}\right)
 $$
 
-| 항 | 현재 실행에서의 값 |
+| Term | Value in this run |
 | --- | ---: |
-| 실제 처치 효과 | 3.000000 |
-| 두 집단의 성향 차이 기여분 | +0.006682 |
-| 두 집단의 오차 차이 기여분 | −0.022353 |
-| 합계: 추정 ATE | 2.984329 |
+| True treatment effect | 3.000000 |
+| Contribution from the difference in user tendencies | +0.006682 |
+| Contribution from the difference in errors | −0.022353 |
+| Total: estimated ATE | 2.984329 |
 
-무작위 배정은 집단 간 차이를 매 실행마다 완전히 없애주는 것은 아닙니다.
-반복 실험에서 평균 차이 추정량의 기댓값은 실제 ATE와 같고,
-이 모델에서는 표본 수가 커질수록 추정 오차의 전형적인 크기가 작아집니다.
-개별 실행의 추정값이 표본 수를 늘릴 때마다 반드시 더 가까워지는 것은 아닙니다.
+Random assignment does not eliminate every difference between groups in every run.
+Across repeated experiments, the estimator's expectation equals the true ATE.
+In this model, larger samples reduce the typical size of estimation error,
+although every individual increase in sample size need not produce a closer estimate.
 
-## 이해 확인
+## Check your understanding
 
-- `true_effect`와 `estimated_ate`는 각각 무엇을 나타내는가?
-- 같은 사용자의 $Y_i(1)$과 $Y_i(0)$를 실제 실험에서 동시에 관측할 수 있을까?
-- 이 코드에서는 `user_quality`를 회귀식으로 조정하지 않아도 ATE를 추정할 수 있는 이유가 무엇인가?
-- ATE가 3이라는 사실만으로 모든 사용자의 개인별 효과가 3이라고 말할 수 있을까?
-  이번 코드에서는 어떤 설정 때문에 그렇게 말할 수 있는가?
+- What do `true_effect` and `estimated_ate` represent?
+- Can we observe the same user's $Y_i(1)$ and $Y_i(0)$ simultaneously in an actual experiment?
+- Why can this code estimate ATE without adjusting for `user_quality` in a regression?
+- Does an ATE of 3 imply that every user's individual effect is 3?
+  Which setting makes that statement true in this simulation?
 
-## 남은 질문
+## Open questions
 
-- 추정 ATE의 표준오차와 신뢰구간은 어떻게 계산할까?
-- 사용자별로 처치 효과가 다르면 ATE와 개인별 효과의 관계는 어떻게 달라질까?
-- UI 배정이 사용자 성향에 따라 달라지면 단순 평균 차이는 무엇을 추정하게 될까?
+- How can we calculate the estimate's standard error and confidence interval?
+- How does ATE relate to individual effects when the effects vary between users?
+- What does the simple difference in means estimate if UI assignment depends on user tendencies?
+
+The last question is explored in [Day 02 · Confounding and Stratification](../day-02/index.md).

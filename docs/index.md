@@ -1,10 +1,13 @@
 # Causal Inference Study
 
-인과추론 학습 내용을 Day별로 모으는 개인 학습 기록입니다.
+Daily study notes on causal inference, supported by small Python experiments.
 
-## 학습 기록
+## Study notes
 
-- [Day 01 · ATE](day-01/index.md) — 무작위 A/B 테스트에서 평균 처치 효과 추정하기
+| Day | Topic | Experiment |
+| --- | --- | --- |
+| [Day 01 · ATE](day-01/index.md) | Average treatment effect | Difference in means in a randomized A/B test |
+| [Day 02 · Confounding and Stratification](day-02/index.md) | Adjustment for a measured confounder | Compare treatment groups within strata and calculate a weighted ATE |
 
-다음 기록은 [기록 작성 가이드](guide.md)를 참고해 추가합니다.
-실습 코드는 [GitHub 저장소](https://github.com/karim-moon/Causal/tree/main/src)에서 볼 수 있습니다.
+Use the [writing guide](guide.md) to add another day.
+The experiment code is available in the [GitHub repository](https://github.com/karim-moon/Causal/tree/main/src).

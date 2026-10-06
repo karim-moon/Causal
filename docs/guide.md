@@ -1,57 +1,61 @@
-# 기록 작성 가이드
+# Writing Guide
 
-## 폴더 규칙
+## Folder conventions
 
-한 Day의 문서와 이미지는 `docs/day-XX/`에 모읍니다.
-실습 코드는 같은 번호의 `src/day_XX/`에 둡니다.
+Keep each day's notes and figures in `docs/day-XX/`.
+Keep its experiment scripts and notebooks in `src/day_XX_topic/`.
 
 ```text
-docs/day-02/
+docs/day-03/
 ├── index.md
 └── figures/
     └── result.png
 
-src/day_02/
+src/day_03_topic/
 └── experiment.py
 ```
 
-문서에서 이미지는 `![실습 결과](figures/result.png)`처럼 상대 경로로 연결합니다.
-공유할 그림은 해당 Day의 `figures/`에 저장하고,
-임시 실험 결과는 Git에서 제외되는 루트 `outputs/`에 저장합니다.
+Link a figure from the notes using a relative path such as `![Experiment result](figures/result.png)`.
+Store figures intended for publication in that day's `figures/` folder.
+Store temporary experiment output in the root `outputs/` folder, which Git ignores.
 
-## 새 기록 만들기
+## Creating another day's notes
 
 ```bash
-mkdir -p docs/day-02 src/day_02
-cp templates/day.md docs/day-02/index.md
+mkdir -p docs/day-03 src/day_03_topic
+cp templates/day.md docs/day-03/index.md
 ```
 
-템플릿의 Day 번호와 제목을 수정하고, 실습 파일을 추가합니다.
-`mkdocs.yml`의 `nav`에 다음 항목을 기존 Day와 같은 들여쓰기로 추가합니다.
+Replace the template's day number and title, and add the experiment script.
+Register the page in `mkdocs.yml`, using the same indentation as the existing days:
 
 ```yaml
 nav:
-  - 홈: index.md
-  - 학습 기록:
-      - Day 01: day-01/index.md
-      - Day 02: day-02/index.md
-  - 기록 작성 가이드: guide.md
+  - Home: index.md
+  - Study notes:
+      - Day 01 · ATE: day-01/index.md
+      - Day 02 · Confounding and Stratification: day-02/index.md
+      - Day 03 · Your topic: day-03/index.md
+  - Writing guide: guide.md
 ```
 
-홈의 학습 기록 표에도 링크를 추가합니다.
-사이트에서 실습 파일을 연결할 때는 GitHub의 코드 URL을 사용합니다.
-`src/`는 문서 사이트에 포함되지 않으므로 `../../src/...` 링크는 사용하지 않습니다.
+Add a link to the table in `docs/index.md`.
+Use GitHub code URLs when linking to experiment scripts from the published notes.
+The documentation website includes `docs/`; it does not include `src/`,
+so links such as `../../src/...` will not work there.
 
-## 문서 형식
+## Note format
 
-각 기록은 **오늘의 질문 → 핵심 개념 → 실습 → 결과 해석 → 남은 질문** 순서로 작성합니다.
-직접 관찰한 결과, 그 결과를 인과적으로 해석하기 위한 가정, 아직 이해하지 못한 점을 구분합니다.
-참고한 책·논문·강의의 링크와 읽은 범위도 기록합니다.
+Write each note in this order: **Today's question → Key concepts → Python experiment → Interpreting the results → Open questions**.
 
-수식은 인라인 `$Y(1)$` 또는 블록 `$$ ... $$` 문법으로 작성합니다.
-코드는 언어를 지정한 코드 블록으로 작성합니다.
+Distinguish the observed results, the assumptions needed for a causal interpretation,
+and the questions that remain.
+Record the books, papers, or lectures you used, including the relevant sections.
 
-## 확인하고 올리기
+Use `$Y(1)$` for inline math and `$$ ... $$` for display math.
+Specify a language when writing fenced code blocks.
+
+## Checking and publishing
 
 ```bash
 uv run mkdocs serve
@@ -60,5 +64,5 @@ uv run ruff check src
 uv run ruff format --check src
 ```
 
-추가한 Python 실습도 직접 실행한 뒤 커밋합니다.
-GitHub Pages 설정을 마치면 `main`에 push할 때 사이트가 갱신됩니다.
+Run the relevant Python experiments before committing.
+After GitHub Pages is configured, a push to `main` updates the website.

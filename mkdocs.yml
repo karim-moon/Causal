@@ -1,5 +1,5 @@
 site_name: Causal Inference Study
-site_description: 인과추론의 개념을 하루씩 정리하고 Python으로 실험하는 학습 기록
+site_description: Daily causal inference study notes and Python experiments
 site_url: https://karim-moon.github.io/Causal/
 repo_url: https://github.com/karim-moon/Causal
 repo_name: karim-moon/Causal
@@ -7,7 +7,7 @@ edit_uri: edit/main/docs/
 
 theme:
   name: material
-  language: ko
+  language: en
   features:
     - navigation.indexes
     - navigation.top
@@ -18,24 +18,24 @@ theme:
       primary: teal
       toggle:
         icon: material/weather-night
-        name: 다크 모드
+        name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: teal
       toggle:
         icon: material/weather-sunny
-        name: 라이트 모드
+        name: Switch to light mode
 
 nav:
-  - 홈: index.md
-  - 학습 기록:
+  - Home: index.md
+  - Study notes:
       - Day 01 · ATE: day-01/index.md
-  - 기록 작성 가이드: guide.md
+      - Day 02 · Confounding and Stratification: day-02/index.md
+  - Writing guide: guide.md
 
 plugins:
   - search:
       lang:
-        - ko
         - en
 
 markdown_extensions:

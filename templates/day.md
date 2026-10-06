@@ -1,33 +1,33 @@
-# Day XX · 주제
+# Day XX · Topic
 
-## 오늘의 질문
+## Today's question
 
-<!-- 어떤 개입의 효과를 알고 싶은가? -->
+<!-- Which intervention's effect do you want to estimate? -->
 
-## 핵심 개념
+## Key concepts
 
-<!-- 정의, 직관, 필요한 수식, 성립 조건을 자신의 말로 정리 -->
+<!-- Explain definitions, intuition, relevant equations, and assumptions in your own words. -->
 
-## Python 실습
+## Python experiment
 
 ```bash
-uv run src/day_XX/experiment.py
+uv run src/day_XX_topic/experiment.py
 ```
 
-<!-- GitHub 코드 링크, 데이터 생성 과정, 실행 결과 -->
+<!-- Include a GitHub code link, the data generation process, and the actual output. -->
 
-## 결과 해석
+## Interpreting the results
 
-<!-- 무엇을 확인했는가? 인과적으로 해석하려면 어떤 가정이 필요한가? -->
+<!-- What did you observe? Which assumptions support a causal interpretation? -->
 
-## 이해 확인
+## Check your understanding
 
-<!-- 개념을 자신의 말로 설명할 수 있는 질문 -->
+<!-- Add questions that help you explain the concepts in your own words. -->
 
-## 남은 질문
+## Open questions
 
-<!-- 다음에 공부할 내용 -->
+<!-- What would you like to study next? -->
 
-## 참고 자료
+## References
 
-<!-- 책/논문/강의 링크와 읽은 범위 -->
+<!-- Link books, papers, or lectures, and identify the relevant sections. -->
