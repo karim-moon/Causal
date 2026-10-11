@@ -49,12 +49,17 @@ See the [uv and Jupyter guide](https://docs.astral.sh/uv/guides/integration/jupy
 │   ├── guide.md                   # Writing guide
 │   ├── day-01/index.md            # Average treatment effect
 │   ├── day-02/index.md            # Confounding and stratification
+│   ├── day-03/                    # DAGs and backdoor adjustment
+│   │   ├── index.md
+│   │   └── figures/backdoor-dag.svg
 │   └── assets/javascripts/        # Math rendering configuration
 ├── src/
 │   ├── day_01_ate/
 │   │   └── simulate_ate.py
-│   └── day_02_confounder/
-│       └── confounder.py
+│   ├── day_02_confounder/
+│   │   └── confounder.py
+│   └── day_03_dag_and_backdoor/
+│       └── adjust.py
 ├── templates/
 │   └── day.md                    # Template for new study notes
 ├── .github/workflows/pages.yml   # Documentation build and deployment
@@ -71,16 +76,17 @@ The root `main.py` is the initial sample; learning experiments live in `src/`.
 
 - [Day 01 · ATE](docs/day-01/index.md): estimate an average treatment effect in a randomized experiment.
 - [Day 02 · Confounding and Stratification](docs/day-02/index.md): compare outcomes within confounder strata and combine the estimates.
+- [Day 03 · DAGs and Backdoor Adjustment](docs/day-03/index.md): use a causal graph to choose an adjustment set and estimate the total treatment effect.
 
 ## Adding another day
 
 ```bash
-mkdir -p docs/day-03 src/day_03_topic
-cp templates/day.md docs/day-03/index.md
+mkdir -p docs/day-04 src/day_04_topic
+cp templates/day.md docs/day-04/index.md
 ```
 
-1. Write the notes in `docs/day-03/index.md`.
-2. Add the experiment scripts to `src/day_03_topic/`.
+1. Write the notes in `docs/day-04/index.md`.
+2. Add the experiment scripts to `src/day_04_topic/`.
 3. Add the page under `nav → Study notes` in `mkdocs.yml`.
 4. Add its link to the study index in `docs/index.md`.
 

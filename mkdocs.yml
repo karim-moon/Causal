@@ -31,6 +31,7 @@ nav:
   - Study notes:
       - Day 01 · ATE: day-01/index.md
       - Day 02 · Confounding and Stratification: day-02/index.md
+      - Day 03 · DAGs and Backdoor Adjustment: day-03/index.md
   - Writing guide: guide.md
 
 plugins:

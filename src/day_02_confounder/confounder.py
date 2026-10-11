@@ -6,7 +6,7 @@ N = 10000
 
 power_user = np.random.binomial(n=1, p=0.4, size=N)
 
-# power user treatment prob might be higher than control
+# Power users are more likely to receive treatment than regular users.
 treated_prob = np.where(
     power_user == 1,
     0.8,
@@ -15,7 +15,7 @@ treated_prob = np.where(
 
 treatment = np.random.binomial(n=1, p=treated_prob)
 
-true_effect = 2.0 # we assume this is a real effect
+true_effect = 2.0  # The simulation's known treatment effect.
 noise = np.random.normal(0, 1, N)
 outcome = (
     5
@@ -30,16 +30,15 @@ control_mean = outcome[treatment == 0].mean()
 naive_ate = treated_mean - control_mean
 
 print("True ATE :", true_effect)
-print("Naive ATE:", naive_ate) # this is wrong!, because we don't denoise the confounder
-# then how?
-# compare power user treatment prob with control treatment prob spearately
+print("Naive ATE:", naive_ate)  # This unadjusted comparison is confounded by user status.
+# Compare treated and untreated outcomes separately within each user-status stratum.
 power_user_treatment_mask = (power_user == 1) & (treatment == 1)
 power_user_control_mask = (power_user == 1) & (treatment == 0)
 
 control_treatment_mask = (power_user == 0) & (treatment == 1)
 control_control_mask = (power_user == 0) & (treatment == 0)
 
-# this method is stratification
+# Stratification adjusts for user status; random outcome noise remains.
 power_treatment_outcome = outcome[power_user_treatment_mask]
 power_control_outcome = outcome[power_user_control_mask]
 
